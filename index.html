@@ -664,7 +664,7 @@
                 ctx.font = '22px Arial';
                 ctx.fillStyle = 'black';
                 ctx.textAlign = 'center';
-                ctx.fillText(nome, canvas.width / 2, 300); // Ajuste a posição y conforme necessário
+                ctx.fillText(nome, canvas.width / 2, 350); // Ajuste a posição y conforme necessário
 
                 const pdf = new jsPDF('landscape');
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 297, 210);
