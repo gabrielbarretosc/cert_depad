@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Certificados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #certificado {
+            display: none;
+            position: absolute;
+            top: -9999px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerador de Certificados</h1>
+    <select id="nome">
+        <option value="">Selecione um nome</option>
+        <option value="Ana">Ana</option>
+        <option value="Carlos">Carlos</option>
+        <option value="Maria">Maria</option>
+        <!-- Adicione mais opções conforme necessário -->
+    </select>
+    <button onclick="gerarCertificado()">Gerar Certificado</button>
+    <canvas id="certificado" width="1040" height="730"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        function gerarCertificado() {
+            const { jsPDF } = window.jspdf;
+            const nome = document.getElementById('nome').value;
+
+            if (!nome) {
+                alert('Por favor, selecione um nome');
+                return;
+            }
+
+            const canvas = document.getElementById('certificado');
+            const ctx = canvas.getContext('2d');
+
+            const img = new Image();
+            img.crossOrigin = 'anonymous'; // Configuração para evitar problemas com "tainted canvas"
+            img.src = 'imagens/certificado.png'; // Caminho para a imagem do certificado
+
+            img.onload = () => {
+                console.log('Imagem carregada com sucesso');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                // Ajusta a posição e estilo do texto conforme necessário
+                ctx.font = '50px Arial';
+                ctx.fillStyle = 'black';
+                ctx.textAlign = 'center';
+                ctx.fillText(nome, canvas.width / 2, 450); // Ajuste a posição y conforme necessário
+
+                const pdf = new jsPDF('landscape');
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 297, 210);
+                pdf.save(`certificado-${nome}.pdf`);
+                console.log('PDF gerado com sucesso');
+            };
+
+            img.onerror = () => {
+                console.error('Erro ao carregar a imagem');
+                alert('Erro ao carregar a imagem do certificado. Verifique o caminho e tente novamente.');
+            };
+        }
+    </script>
+</body>
+</html>
